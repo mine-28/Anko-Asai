@@ -22,7 +22,7 @@ export const botConfig = {
     // 4 = Custom
     // 5 = Competing
     activities: [
-    @bot.event
+@bot.event
 async def on_ready():
     print(f'Bot online come {bot.user}')
     
