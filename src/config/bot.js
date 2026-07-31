@@ -22,10 +22,16 @@ export const botConfig = {
     // 4 = Custom
     // 5 = Competing
     activities: [
-@bot.event
-async def on_ready():
-    print(f'Bot online come {bot.user}')
-    
+  {
+        // Text users will see (example: "Playing /help | Titan Bot").
+        name: "Made by Mine",
+        // Activity type number (0 = Playing).
+        type: 0,
+      },
+    ],
+  },
+
+
     # Rimuove l'attività
     await bot.change_presence(activity=None)
   // =========================
