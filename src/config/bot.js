@@ -22,15 +22,17 @@ export const botConfig = {
     // 4 = Custom
     // 5 = Competing
     activities: [
-  {
-        // Text users will see (example: "Playing /help | Titan Bot").
-        name: "Made by Mine",
-        // Activity type number (0 = Playing).
-        type: 0,
-      },
-    ],
-  },
+ const { ActivityType } = require('discord.js');
 
+client.once('ready', () => {
+    console.log(`Bot avviato come ${client.user.tag}`);
+
+    // Imposta lo stato personalizzato "Made by Mine"
+    client.user.setPresence({
+        activities: [{ name: 'Made by Mine', type: ActivityType.Custom }],
+        status: 'online',
+    });
+});
 
     # Rimuove l'attività
     await bot.change_presence(activity=None)
