@@ -29,7 +29,48 @@ export default {
       if (message.author.bot || !message.guild) return;
 
       logger.debug(`Message received from ${message.author.tag}: ${message.content}`);
+async function handleAutoresponders(message, client) {
+  try {
+    if (!message.guild || message.author.bot) return;
 
+    const config = await getGuildConfig(client, message.guild.id);
+    const autores = Array.isArray(config?.autoresponders) ? config.autoresponders : [];
+    if (autores.length === 0) return;
+
+    const content = message.content || '';
+    for (const entry of autores) {
+      const trigger = entry.trigger || '';
+      const resp = entry.response || '';
+      const matchType = entry.match || 'contains';
+      const caseSensitive = !!entry.caseSensitive;
+
+      let hay = content;
+      let needle = trigger;
+      if (!caseSensitive) {
+        hay = hay.toLowerCase();
+        needle = needle.toLowerCase();
+      }
+
+      let matched = false;
+      if (matchType === 'exact') {
+        matched = hay.trim() === needle.trim();
+      } else {
+        matched = hay.includes(needle);
+      }
+
+      if (matched) {
+        const finalMessage = resp
+          .replace(/\{user\}/g, `<@${message.author.id}>`)
+          .replace(/\{server\}/g, `${message.guild.name}`);
+
+        message.channel.send({ content: finalMessage }).catch(() => {});
+        // facoltativo: break; // se vuoi fermarti alla prima corrispondenza
+      }
+    }
+  } catch (error) {
+    logger.error('Error in autoresponder handler:', error);
+  }
+}
       const countingProcessed = await handleCountingGame(message, client);
       if (countingProcessed) {
         return;
